@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package gatewayservice;
+option go_package = ".;pb";
+
+import "google/api/annotations.proto";
+import "ping.proto";
+import "booking.proto";
+
+service GatewayService {
+    rpc SayHello(Ping) returns (Pong){
+        option (google.api.http) ={
+            get:"/ping"     
+        };
+    } 
+
+    rpc getBooking(GetBookingRequest) returns (GetBookingResponse) {
+        option (google.api.http) ={
+            get:"/getbooking"
+        };
+    }
+}

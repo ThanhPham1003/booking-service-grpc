@@ -1,0 +1,15 @@
+option go_package = ".;pb";
+
+message Booking{
+    optional float Area = 1;
+    optional float Price = 2;
+    optional string Note = 3;
+    optional bool IsConfirmed = 4;
+}
+message GetBookingRequest {
+}
+
+message GetBookingResponse {
+    repeated Booking Booking = 1;
+}
+

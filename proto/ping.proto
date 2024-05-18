@@ -1,0 +1,7 @@
+option go_package = ".;pb";
+message Ping{
+}
+
+message Pong{
+    required string message = 1;
+}
