@@ -6,6 +6,7 @@ option go_package = ".;pb";
 import "google/api/annotations.proto";
 import "ping.proto";
 import "booking.proto";
+import "email.proto";
 
 service GatewayService {
     rpc SayHello(Ping) returns (Pong){
@@ -17,6 +18,20 @@ service GatewayService {
     rpc getBooking(GetBookingRequest) returns (GetBookingResponse) {
         option (google.api.http) ={
             get:"/getbooking"
+        };
+    }
+
+    rpc SendEmail(SendEmailRequest) returns (SendEmailResponse) {
+        option (google.api.http) ={
+            post:"/sendemail"
+            body:"*"
+        };
+    }
+
+    rpc CreateEmail(CreateEmailRequest) returns (CreateEmailResponse) {
+        option (google.api.http) ={
+            post:"/createemail"
+            body:"*"
         };
     }
 }

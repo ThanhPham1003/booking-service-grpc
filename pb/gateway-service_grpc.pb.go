@@ -19,8 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GatewayService_SayHello_FullMethodName   = "/gatewayservice.GatewayService/SayHello"
-	GatewayService_GetBooking_FullMethodName = "/gatewayservice.GatewayService/getBooking"
+	GatewayService_SayHello_FullMethodName    = "/gatewayservice.GatewayService/SayHello"
+	GatewayService_GetBooking_FullMethodName  = "/gatewayservice.GatewayService/getBooking"
+	GatewayService_SendEmail_FullMethodName   = "/gatewayservice.GatewayService/SendEmail"
+	GatewayService_CreateEmail_FullMethodName = "/gatewayservice.GatewayService/CreateEmail"
 )
 
 // GatewayServiceClient is the client API for GatewayService service.
@@ -29,6 +31,8 @@ const (
 type GatewayServiceClient interface {
 	SayHello(ctx context.Context, in *Ping, opts ...grpc.CallOption) (*Pong, error)
 	GetBooking(ctx context.Context, in *GetBookingRequest, opts ...grpc.CallOption) (*GetBookingResponse, error)
+	SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendEmailResponse, error)
+	CreateEmail(ctx context.Context, in *CreateEmailRequest, opts ...grpc.CallOption) (*CreateEmailResponse, error)
 }
 
 type gatewayServiceClient struct {
@@ -57,12 +61,32 @@ func (c *gatewayServiceClient) GetBooking(ctx context.Context, in *GetBookingReq
 	return out, nil
 }
 
+func (c *gatewayServiceClient) SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendEmailResponse, error) {
+	out := new(SendEmailResponse)
+	err := c.cc.Invoke(ctx, GatewayService_SendEmail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayServiceClient) CreateEmail(ctx context.Context, in *CreateEmailRequest, opts ...grpc.CallOption) (*CreateEmailResponse, error) {
+	out := new(CreateEmailResponse)
+	err := c.cc.Invoke(ctx, GatewayService_CreateEmail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatewayServiceServer is the server API for GatewayService service.
 // All implementations must embed UnimplementedGatewayServiceServer
 // for forward compatibility
 type GatewayServiceServer interface {
 	SayHello(context.Context, *Ping) (*Pong, error)
 	GetBooking(context.Context, *GetBookingRequest) (*GetBookingResponse, error)
+	SendEmail(context.Context, *SendEmailRequest) (*SendEmailResponse, error)
+	CreateEmail(context.Context, *CreateEmailRequest) (*CreateEmailResponse, error)
 	mustEmbedUnimplementedGatewayServiceServer()
 }
 
@@ -75,6 +99,12 @@ func (UnimplementedGatewayServiceServer) SayHello(context.Context, *Ping) (*Pong
 }
 func (UnimplementedGatewayServiceServer) GetBooking(context.Context, *GetBookingRequest) (*GetBookingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBooking not implemented")
+}
+func (UnimplementedGatewayServiceServer) SendEmail(context.Context, *SendEmailRequest) (*SendEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendEmail not implemented")
+}
+func (UnimplementedGatewayServiceServer) CreateEmail(context.Context, *CreateEmailRequest) (*CreateEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateEmail not implemented")
 }
 func (UnimplementedGatewayServiceServer) mustEmbedUnimplementedGatewayServiceServer() {}
 
@@ -125,6 +155,42 @@ func _GatewayService_GetBooking_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatewayService_SendEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServiceServer).SendEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GatewayService_SendEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServiceServer).SendEmail(ctx, req.(*SendEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GatewayService_CreateEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServiceServer).CreateEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GatewayService_CreateEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServiceServer).CreateEmail(ctx, req.(*CreateEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatewayService_ServiceDesc is the grpc.ServiceDesc for GatewayService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +205,14 @@ var GatewayService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getBooking",
 			Handler:    _GatewayService_GetBooking_Handler,
+		},
+		{
+			MethodName: "SendEmail",
+			Handler:    _GatewayService_SendEmail_Handler,
+		},
+		{
+			MethodName: "CreateEmail",
+			Handler:    _GatewayService_CreateEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
